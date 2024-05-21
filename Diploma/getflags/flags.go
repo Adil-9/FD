@@ -42,7 +42,7 @@ func ParseAllFlags() (variables.AllVariables, error) {
 	flag.StringVar(&AllFlags.CheckPassword, "password", "", "provide password you would like to assess")
 	flag.StringVar(&AllFlags.Filename, "f", "Passwords.txt", "provide filename to save dictionary into, if there is already exist file, it will be deleted and created again")
 	flag.StringVar(&AllFlags.ProvidedFileName, "fc", "", "provide filename from which to take possible passwords, only works with -check and -hash")
-	flag.StringVar(&AllFlags.Hash, "hash", "md5", "provide hashing method from list: md5, sha1, sha2, ntlm, lanman")
+	flag.StringVar(&AllFlags.Hash, "hash", "", "provide hashing method from list: md5, sha1, sha256")
 	flag.StringVar(&AllFlags.HashValue, "hv", "", "provide hash value to decrypt")
 
 	flag.IntVar(&AllFlags.NumberOfWords, "N", 0, "provide number of word to appear in permutation")

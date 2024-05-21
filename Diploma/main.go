@@ -76,4 +76,13 @@ func main() {
 			check.CheckInCreatedDict(AllFlags.CheckPassword)
 		}
 	}
+	if AllFlags.Hash != "" {
+		if AllFlags.Hash == "md5" || AllFlags.Hash == "sha1" || AllFlags.Hash == "sha2" || AllFlags.Hash == "ntml" || AllFlags.Hash == "lanman" {
+			if AllFlags.HashValue != "" {
+				check.HashCheck(AllFlags.Hash, AllFlags.HashValue)
+			}
+		}
+	}
 }
+
+

@@ -2,7 +2,9 @@ package check
 
 import (
 	"bufio"
+	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"io/ioutil"
 	"log"
@@ -206,4 +208,221 @@ func PasswordCheckerFromFile(password, providedFileName string) {
 	if !found {
 		log.Println("The password was NOT FOUND in", providedFileName)
 	}
+}
+
+func HashCheck(Hash, HashValue string) {
+	switch Hash {
+	case "md5":
+		withMD5HashRockyou(HashValue)
+		withMD5HashRealhuman(HashValue)
+	case "sha1":
+		withSHA1HashRockyou(HashValue)
+		withSHA1HashRealhuman(HashValue)
+	case "sha256":
+		withSHA256HashRockyou(HashValue)
+		withSHA256HashRealhuman(HashValue)
+		// case "bcrypt":
+		// case "scrypt":
+	}
+}
+
+func withMD5HashRockyou(hashvalue string) {
+	dirName := "./leaked/rockyou/"
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+out:
+	for _, v := range files {
+		file, err := os.Open(dirName + v.Name())
+		if err != nil {
+			log.Fatal("Failed to open file:", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			hash := encodeMD5(line)
+			if hashvalue == hash {
+				log.Println(redColor, "The hash decrypts to", line, "and was found in rockyou password leak", noneColor)
+				break out
+			}
+		}
+	}
+}
+
+func withMD5HashRealhuman(hashvalue string) {
+	dirName := "./leaked/realhuman/"
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+out:
+	for _, v := range files {
+		file, err := os.Open(dirName + v.Name())
+		if err != nil {
+			log.Fatal("Failed to open file:", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			hash := encodeMD5(line)
+			if hashvalue == hash {
+				log.Println(redColor, "The hash decrypts to", line, "and was found in realhuman password leak", noneColor)
+				break out
+			}
+		}
+	}
+}
+
+func withSHA1HashRealhuman(hashvalue string) {
+	dirName := "./leaked/realhuman/"
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+out:
+	for _, v := range files {
+		file, err := os.Open(dirName + v.Name())
+		if err != nil {
+			log.Fatal("Failed to open file:", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			hash := encodeSHA1(line)
+			if hashvalue == hash {
+				log.Println(redColor, "The hash decrypts to", line, "and was found in realhuman password leak", noneColor)
+				break out
+			}
+		}
+	}
+}
+
+func withSHA1HashRockyou(hashvalue string) {
+	dirName := "./leaked/rockyou/"
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+out:
+	for _, v := range files {
+		file, err := os.Open(dirName + v.Name())
+		if err != nil {
+			log.Fatal("Failed to open file:", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			hash := encodeSHA1(line)
+			if hashvalue == hash {
+				log.Println(redColor, "The hash decrypts to", line, "and was found in rockyou password leak", noneColor)
+				break out
+			}
+		}
+	}
+}
+
+func withSHA256HashRealhuman(hashvalue string) {
+	dirName := "./leaked/realhuman/"
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+out:
+	for _, v := range files {
+		file, err := os.Open(dirName + v.Name())
+		if err != nil {
+			log.Fatal("Failed to open file:", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			hash := encodeSHA256(line)
+			if hashvalue == hash {
+				log.Println(redColor, "The hash decrypts to", line, "and was found in realhuman password leak", noneColor)
+				break out
+			}
+		}
+	}
+}
+
+func withSHA256HashRockyou(hashvalue string) {
+	dirName := "./leaked/rockyou/"
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		log.Fatal(err)
+	}
+out:
+	for _, v := range files {
+		file, err := os.Open(dirName + v.Name())
+		if err != nil {
+			log.Fatal("Failed to open file:", err)
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			hash := encodeSHA256(line)
+			if hashvalue == hash {
+				log.Println(redColor, "The hash decrypts to", line, "and was found in rockyou password leak", noneColor)
+				break out
+			}
+		}
+	}
+}
+
+// Function to encode a string to MD5
+func encodeMD5(s string) string {
+	// Create a new MD5 hash
+	hash := md5.New()
+
+	// Write the string to the hash
+	hash.Write([]byte(s))
+
+	// Get the hash as a byte slice
+	hashBytes := hash.Sum(nil)
+
+	// Convert the byte slice to a hexadecimal string
+	return hex.EncodeToString(hashBytes)
+}
+
+// Function to encode a string to SHA-1
+func encodeSHA1(s string) string {
+	// Create a new SHA-1 hash
+	hash := sha1.New()
+
+	// Write the string to the hash
+	hash.Write([]byte(s))
+
+	// Get the hash as a byte slice
+	hashBytes := hash.Sum(nil)
+
+	// Convert the byte slice to a hexadecimal string
+	return hex.EncodeToString(hashBytes)
+}
+
+// Function to encode a string to SHA-256
+func encodeSHA256(s string) string {
+	// Create a new SHA-256 hash
+	hash := sha256.New()
+
+	// Write the string to the hash
+	hash.Write([]byte(s))
+
+	// Get the hash as a byte slice
+	hashBytes := hash.Sum(nil)
+
+	// Convert the byte slice to a hexadecimal string
+	return hex.EncodeToString(hashBytes)
 }
